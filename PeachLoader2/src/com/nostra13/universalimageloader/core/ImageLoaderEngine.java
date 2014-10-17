@@ -104,7 +104,7 @@ class ImageLoaderEngine {
 				.createExecutor(configuration.threadPoolSize, configuration.threadPriority,
 				configuration.tasksProcessingType);
 	}
-
+	
 	/**
 	 * Returns URI of image which is loading at this moment into passed {@link com.nostra13.universalimageloader.core.imageaware.ImageAware}
 	 */

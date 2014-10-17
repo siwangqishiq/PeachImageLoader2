@@ -9,12 +9,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/btn"
-            android:text="跳转"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <ImageView
             android:id="@+id/img1"
             android:layout_width="match_parent"
@@ -26,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_launcher" />
-
         <ImageView
             android:id="@+id/img3"
             android:layout_width="match_parent"

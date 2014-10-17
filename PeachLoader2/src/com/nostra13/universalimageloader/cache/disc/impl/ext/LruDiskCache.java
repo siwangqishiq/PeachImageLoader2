@@ -93,7 +93,7 @@ public class LruDiskCache implements DiskCache {
 		if (fileNameGenerator == null) {
 			throw new IllegalArgumentException("fileNameGenerator" + ERROR_ARG_NULL);
 		}
-
+		
 		if (cacheMaxSize == 0) {
 			cacheMaxSize = Long.MAX_VALUE;
 		}

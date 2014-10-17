@@ -332,7 +332,7 @@ public final class ImageLoader
         if (bmp != null && !bmp.isRecycled())
         {
             L.d(LOG_LOAD_IMAGE_FROM_MEMORY_CACHE, memoryCacheKey);
-            
+           
             if (options.shouldPostProcess())
             {
                 ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri,
@@ -374,6 +374,7 @@ public final class ImageLoader
                     progressListener, engine.getLockForUri(uri));
             LoadAndDisplayImageTask displayTask = new LoadAndDisplayImageTask(
                     engine, imageLoadingInfo, defineHandler(options));
+            
             if (options.isSyncLoading())
             {
                 displayTask.run();

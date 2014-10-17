@@ -25,6 +25,8 @@ public class MainApplication extends Application
         // or you can create default configuration by
         // ImageLoaderConfiguration.createDefault(this);
         // method.
+        ImageLoaderConfiguration defaultConfig = ImageLoaderConfiguration.createDefault(context);
+        
          ImageLoaderConfiguration config = new
          ImageLoaderConfiguration.Builder(context)
          .threadPriority(Thread.NORM_PRIORITY - 2)
