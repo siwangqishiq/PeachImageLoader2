@@ -60,16 +60,17 @@ public class LruMemoryCache implements MemoryCache
             throw new NullPointerException("key == null");
         }
 
-        // synchronized (this) {
-        // return map.get(key);
-        // }
+        synchronized (this)
+        {
+            return map.get(key);
+        }
 
-        Bitmap ret = null;
-        mLock.readLock().lock();
-        ret = map.get(key);
-        mLock.readLock().unlock();
-
-        return ret;
+        // Bitmap ret = null;
+        // mLock.readLock().lock();
+        // ret = map.get(key);
+        // mLock.readLock().unlock();
+        //
+        // return ret;
     }
 
     /**
@@ -85,24 +86,24 @@ public class LruMemoryCache implements MemoryCache
         }
         // System.out.println("put  "+key);
 
-        // synchronized (this)
-        // {
+        synchronized (this)
+        {
+            size += sizeOf(key, value);
+            Bitmap previous = map.put(key, value);
+            if (previous != null)
+            {
+                size -= sizeOf(key, previous);
+            }
+        }
+
+        // mLock.writeLock().lock();
         // size += sizeOf(key, value);
         // Bitmap previous = map.put(key, value);
         // if (previous != null)
         // {
         // size -= sizeOf(key, previous);
         // }
-        // }
-
-        mLock.writeLock().lock();
-        size += sizeOf(key, value);
-        Bitmap previous = map.put(key, value);
-        if (previous != null)
-        {
-            size -= sizeOf(key, previous);
-        }
-        mLock.writeLock().unlock();
+        // mLock.writeLock().unlock();
 
         trimToSize(maxSize);
         return true;
@@ -122,7 +123,7 @@ public class LruMemoryCache implements MemoryCache
         {
             String key;
             Bitmap value;
-            
+
             mLock.writeLock().lock();
             if (size < 0 || (map.isEmpty() && size != 0))
             {
@@ -147,35 +148,33 @@ public class LruMemoryCache implements MemoryCache
             map.remove(key);
             size -= sizeOf(key, value);
             mLock.writeLock().unlock();
-            
-            
-            
-//            synchronized (this)
-//            {
-//                if (size < 0 || (map.isEmpty() && size != 0))
-//                {
-//                    throw new IllegalStateException(getClass().getName()
-//                            + ".sizeOf() is reporting inconsistent results!");
-//                }
-//
-//                if (size <= maxSize || map.isEmpty())
-//                {
-//                    break;
-//                }
-//
-//                Map.Entry<String, Bitmap> toEvict = map.entrySet().iterator()
-//                        .next();
-//                if (toEvict == null)
-//                {
-//                    break;
-//                }
-//
-//                key = toEvict.getKey();
-//                value = toEvict.getValue();
-//                map.remove(key);
-//                size -= sizeOf(key, value);
-//            }// end sync
-            
+
+            // synchronized (this)
+            // {
+            // if (size < 0 || (map.isEmpty() && size != 0))
+            // {
+            // throw new IllegalStateException(getClass().getName()
+            // + ".sizeOf() is reporting inconsistent results!");
+            // }
+            //
+            // if (size <= maxSize || map.isEmpty())
+            // {
+            // break;
+            // }
+            //
+            // Map.Entry<String, Bitmap> toEvict = map.entrySet().iterator()
+            // .next();
+            // if (toEvict == null)
+            // {
+            // break;
+            // }
+            //
+            // key = toEvict.getKey();
+            // value = toEvict.getValue();
+            // map.remove(key);
+            // size -= sizeOf(key, value);
+            // }// end sync
+
         }// end while
     }
 

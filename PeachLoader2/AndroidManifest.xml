@@ -51,16 +51,20 @@
         <activity
             android:name="com.xinlan.peachloader.MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.xinlan.peachloader.SubActivity"
             android:label="@string/app_name"
             android:screenOrientation="sensor" >
+        </activity>
+        <activity
+            android:name="com.xinlan.peachloader.MainListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="sensor" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

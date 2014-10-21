@@ -208,7 +208,7 @@ public final class DisplayImageOptions {
 		private Drawable imageOnFail = null;
 		private boolean resetViewBeforeLoading = false;
 		private boolean cacheInMemory = false;
-		private boolean cacheOnDisk = false;
+		private boolean cacheOnDisk = true;
 		private ImageScaleType imageScaleType = ImageScaleType.IN_SAMPLE_POWER_OF_2;
 		private Options decodingOptions = new Options();
 		private int delayBeforeLoading = 0;

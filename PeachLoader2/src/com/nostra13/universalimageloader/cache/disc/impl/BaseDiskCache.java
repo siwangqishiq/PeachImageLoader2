@@ -124,7 +124,9 @@ public abstract class BaseDiskCache implements DiskCache {
 	@Override
 	public boolean save(String imageUri, Bitmap bitmap) throws IOException {
 		File imageFile = getFile(imageUri);
+		System.out.println("disc-->"+imageFile.getAbsolutePath());
 		File tmpFile = new File(imageFile.getAbsolutePath() + TEMP_IMAGE_POSTFIX);
+		
 		OutputStream os = new BufferedOutputStream(new FileOutputStream(tmpFile), bufferSize);
 		boolean savedSuccessfully = false;
 		try {

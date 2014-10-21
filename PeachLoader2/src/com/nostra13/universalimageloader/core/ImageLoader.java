@@ -329,8 +329,10 @@ public final class ImageLoader
         listener.onLoadingStarted(uri, imageAware.getWrappedView());
 
         Bitmap bmp = configuration.memoryCache.get(memoryCacheKey);
+        
         if (bmp != null && !bmp.isRecycled())
         {
+            System.out.println("从内存缓存-->"+uri);
             L.d(LOG_LOAD_IMAGE_FROM_MEMORY_CACHE, memoryCacheKey);
            
             if (options.shouldPostProcess())
@@ -359,6 +361,7 @@ public final class ImageLoader
         }
         else//bmp 不可用
         {
+            //System.out.println(uri);
             if (options.shouldShowImageOnLoading())
             {
                 imageAware.setImageDrawable(options

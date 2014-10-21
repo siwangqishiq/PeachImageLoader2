@@ -160,7 +160,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener
                         L.e(ERROR_PRE_PROCESSOR_NULL, memoryCacheKey);
                     }
                 }
-                System.out.println("sdadasdsa   "+options.isCacheInMemory());
+                //System.out.println("sdadasdsa   "+options.isCacheInMemory());
                 if (bmp != null && options.isCacheInMemory())
                 {
                     L.d(LOG_CACHE_IMAGE_IN_MEMORY, memoryCacheKey);
@@ -170,7 +170,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener
             else
             // bmp在缓存中取得
             {
-                System.out.println(" bmp在缓存中取得");
+                //System.out.println(" bmp在缓存中取得");
                 loadedFrom = LoadedFrom.MEMORY_CACHE;
                 L.d(LOG_GET_IMAGE_FROM_MEMORY_CACHE_AFTER_WAITING,
                         memoryCacheKey);
@@ -263,6 +263,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener
         try
         {
             File imageFile = configuration.diskCache.get(uri);
+            System.out.println(imageFile.getAbsolutePath());
             if (imageFile != null && imageFile.exists())// 文件在磁盘中
             {
                 L.d(LOG_LOAD_IMAGE_FROM_DISK_CACHE, memoryCacheKey);
