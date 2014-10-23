@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2014 Sergey Tarasevich
+ * Copyright 2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,36 +28,34 @@ import com.nostra13.universalimageloader.core.assist.ViewScaleType;
  * callbacks.
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @see ViewAware
  * @see ImageViewAware
- * @see NonViewAware
+ * @see ImageNonViewAware
  * @since 1.9.0
  */
 public interface ImageAware {
 	/**
 	 * Returns width of image aware view. This value is used to define scale size for original image.
 	 * Can return 0 if width is undefined.<br />
-	 * Is called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * Called on UI thread.
 	 */
 	int getWidth();
 
 	/**
 	 * Returns height of image aware view. This value is used to define scale size for original image.
 	 * Can return 0 if height is undefined.<br />
-	 * Is called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * Called on UI thread.
 	 */
 	int getHeight();
 
 	/**
 	 * Returns {@linkplain com.nostra13.universalimageloader.core.assist.ViewScaleType scale type} which is used for
-	 * scaling image for this image aware view. Must <b>NOT</b> return <b>null</b>.
+	 * scaling image for this image aware view.
 	 */
 	ViewScaleType getScaleType();
 
 	/**
-	 * Returns wrapped Android {@link android.view.View View}. Can return <b>null</b> if no view is wrapped or view was
-	 * collected by GC.<br />
-	 * Is called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * Returns wrapped Android {@link android.view.View View}. Can return <b>null</b> if no view is wrapped.<br />
+	 * Called on UI thread.
 	 */
 	View getWrappedView();
 
@@ -66,7 +64,7 @@ public interface ImageAware {
 	 * of task for this image aware view and fires
 	 * {@link com.nostra13.universalimageloader.core.listener.ImageLoadingListener#onLoadingCancelled(String,
 	 * android.view.View) ImageLoadingListener#onLoadingCancelled(String, View)} callback.<br />
-	 * Mey be called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * May be called on UI thread.
 	 *
 	 * @return <b>true</b> - if view is collected by GC and ImageLoader should stop processing this image aware view;
 	 * <b>false</b> - otherwise
@@ -86,7 +84,7 @@ public interface ImageAware {
 
 	/**
 	 * Sets image drawable into this image aware view.<br />
-	 * Displays drawable in this image aware view
+	 * Called on UI thread to display drawable in this image aware view
 	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions.Builder#showImageForEmptyUri(
 	 *android.graphics.drawable.Drawable) for empty Uri},
 	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions.Builder#showImageOnLoading(
@@ -94,8 +92,7 @@ public interface ImageAware {
 	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions.Builder#showImageOnFail(
 	 *android.graphics.drawable.Drawable) on loading fail}. These drawables can be specified in
 	 * {@linkplain com.nostra13.universalimageloader.core.DisplayImageOptions display options}.<br />
-	 * Also can be called in {@link com.nostra13.universalimageloader.core.display.BitmapDisplayer BitmapDisplayer}.< br />
-	 * Is called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * Also can be called in {@link com.nostra13.universalimageloader.core.display.BitmapDisplayer BitmapDisplayer}.
 	 *
 	 * @return <b>true</b> if drawable was set successfully; <b>false</b> - otherwise
 	 */
@@ -103,10 +100,9 @@ public interface ImageAware {
 
 	/**
 	 * Sets image bitmap into this image aware view.<br />
-	 * Displays loaded and decoded image {@link android.graphics.Bitmap} in this image view aware.
+	 * Called on UI thread to display loaded and decoded image {@link android.graphics.Bitmap} in this image view aware.
 	 * Actually it's used only in
-	 * {@link com.nostra13.universalimageloader.core.display.BitmapDisplayer BitmapDisplayer}.< br />
-	 * Is called on UI thread if ImageLoader was called on UI thread. Otherwise - on background thread.
+	 * {@link com.nostra13.universalimageloader.core.display.BitmapDisplayer BitmapDisplayer}.
 	 *
 	 * @return <b>true</b> if bitmap was set successfully; <b>false</b> - otherwise
 	 */

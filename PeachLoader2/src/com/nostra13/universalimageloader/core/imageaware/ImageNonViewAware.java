@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2014 Sergey Tarasevich
+ * Copyright 2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,20 +31,17 @@ import com.nostra13.universalimageloader.core.assist.ViewScaleType;
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  * @since 1.9.0
  */
-public class NonViewAware implements ImageAware {
+public class ImageNonViewAware implements ImageAware {
 
 	protected final String imageUri;
 	protected final ImageSize imageSize;
 	protected final ViewScaleType scaleType;
 
-	public NonViewAware(ImageSize imageSize, ViewScaleType scaleType) {
+	public ImageNonViewAware(ImageSize imageSize, ViewScaleType scaleType) {
 		this(null, imageSize, scaleType);
 	}
 
-	public NonViewAware(String imageUri, ImageSize imageSize, ViewScaleType scaleType) {
-		if (imageSize == null) throw new IllegalArgumentException("imageSize must not be null");
-		if (scaleType == null) throw new IllegalArgumentException("scaleType must not be null");
-
+	public ImageNonViewAware(String imageUri, ImageSize imageSize, ViewScaleType scaleType) {
 		this.imageUri = imageUri;
 		this.imageSize = imageSize;
 		this.scaleType = scaleType;

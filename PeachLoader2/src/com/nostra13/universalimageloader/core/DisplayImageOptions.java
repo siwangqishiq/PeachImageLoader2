@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import com.nostra13.universalimageloader.core.process.BitmapProcessor;
  * <li>whether {@link com.nostra13.universalimageloader.core.imageaware.ImageAware image aware view} should be reset
  * before image loading start</li>
  * <li>whether loaded image will be cached in memory</li>
- * <li>whether loaded image will be cached on disk</li>
+ * <li>whether loaded image will be cached on disc</li>
  * <li>image scale type</li>
  * <li>decoding options (including bitmap decoding configuration)</li>
  * <li>delay before loading of image</li>
@@ -72,7 +72,7 @@ public final class DisplayImageOptions {
 	private final Drawable imageOnFail;
 	private final boolean resetViewBeforeLoading;
 	private final boolean cacheInMemory;
-	private final boolean cacheOnDisk;
+	private final boolean cacheOnDisc;
 	private final ImageScaleType imageScaleType;
 	private final Options decodingOptions;
 	private final int delayBeforeLoading;
@@ -93,7 +93,7 @@ public final class DisplayImageOptions {
 		imageOnFail = builder.imageOnFail;
 		resetViewBeforeLoading = builder.resetViewBeforeLoading;
 		cacheInMemory = builder.cacheInMemory;
-		cacheOnDisk = builder.cacheOnDisk;
+		cacheOnDisc = builder.cacheOnDisc;
 		imageScaleType = builder.imageScaleType;
 		decodingOptions = builder.decodingOptions;
 		delayBeforeLoading = builder.delayBeforeLoading;
@@ -150,8 +150,8 @@ public final class DisplayImageOptions {
 		return cacheInMemory;
 	}
 
-	public boolean isCacheOnDisk() {
-		return cacheOnDisk;
+	public boolean isCacheOnDisc() {
+		return cacheOnDisc;
 	}
 
 	public ImageScaleType getImageScaleType() {
@@ -208,7 +208,7 @@ public final class DisplayImageOptions {
 		private Drawable imageOnFail = null;
 		private boolean resetViewBeforeLoading = false;
 		private boolean cacheInMemory = false;
-		private boolean cacheOnDisk = true;
+		private boolean cacheOnDisc = false;
 		private ImageScaleType imageScaleType = ImageScaleType.IN_SAMPLE_POWER_OF_2;
 		private Options decodingOptions = new Options();
 		private int delayBeforeLoading = 0;
@@ -330,7 +330,6 @@ public final class DisplayImageOptions {
 		 *
 		 * @deprecated Use {@link #cacheInMemory(boolean) cacheInMemory(true)} instead
 		 */
-		@Deprecated
 		public Builder cacheInMemory() {
 			cacheInMemory = true;
 			return this;
@@ -343,28 +342,18 @@ public final class DisplayImageOptions {
 		}
 
 		/**
-		 * Loaded image will be cached on disk
+		 * Loaded image will be cached on disc
 		 *
-		 * @deprecated Use {@link #cacheOnDisk(boolean) cacheOnDisk(true)} instead
+		 * @deprecated Use {@link #cacheOnDisc(boolean) cacheOnDisc(true)} instead
 		 */
-		@Deprecated
 		public Builder cacheOnDisc() {
-			return cacheOnDisk(true);
+			cacheOnDisc = true;
+			return this;
 		}
 
-		/**
-		 * Sets whether loaded image will be cached on disk
-		 *
-		 * @deprecated Use {@link #cacheOnDisk(boolean)} instead
-		 */
-		@Deprecated
-		public Builder cacheOnDisc(boolean cacheOnDisk) {
-			return cacheOnDisk(cacheOnDisk);
-		}
-
-		/** Sets whether loaded image will be cached on disk */
-		public Builder cacheOnDisk(boolean cacheOnDisk) {
-			this.cacheOnDisk = cacheOnDisk;
+		/** Sets whether loaded image will be cached on disc */
+		public Builder cacheOnDisc(boolean cacheOnDisc) {
+			this.cacheOnDisc = cacheOnDisc;
 			return this;
 		}
 
@@ -470,7 +459,7 @@ public final class DisplayImageOptions {
 			imageOnFail = options.imageOnFail;
 			resetViewBeforeLoading = options.resetViewBeforeLoading;
 			cacheInMemory = options.cacheInMemory;
-			cacheOnDisk = options.cacheOnDisk;
+			cacheOnDisc = options.cacheOnDisc;
 			imageScaleType = options.imageScaleType;
 			decodingOptions = options.decodingOptions;
 			delayBeforeLoading = options.delayBeforeLoading;
@@ -495,7 +484,7 @@ public final class DisplayImageOptions {
 	 * <ul>
 	 * <li>View will <b>not</b> be reset before loading</li>
 	 * <li>Loaded image will <b>not</b> be cached in memory</li>
-	 * <li>Loaded image will <b>not</b> be cached on disk</li>
+	 * <li>Loaded image will <b>not</b> be cached on disc</li>
 	 * <li>{@link ImageScaleType#IN_SAMPLE_POWER_OF_2} decoding type will be used</li>
 	 * <li>{@link Bitmap.Config#ARGB_8888} bitmap config will be used for image decoding</li>
 	 * <li>{@link SimpleBitmapDisplayer} will be used for image displaying</li>

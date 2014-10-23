@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013-2014 Sergey Tarasevich
+ * Copyright 2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,34 +89,37 @@ public final class ImageSizeUtils {
 	 */
 	public static int computeImageSampleSize(ImageSize srcSize, ImageSize targetSize, ViewScaleType viewScaleType,
 			boolean powerOf2Scale) {
-		final int srcWidth = srcSize.getWidth();
-		final int srcHeight = srcSize.getHeight();
-		final int targetWidth = targetSize.getWidth();
-		final int targetHeight = targetSize.getHeight();
+		int srcWidth = srcSize.getWidth();
+		int srcHeight = srcSize.getHeight();
+		int targetWidth = targetSize.getWidth();
+		int targetHeight = targetSize.getHeight();
 
 		int scale = 1;
+
+		int widthScale = srcWidth / targetWidth;
+		int heightScale = srcHeight / targetHeight;
 
 		switch (viewScaleType) {
 			case FIT_INSIDE:
 				if (powerOf2Scale) {
-					final int halfWidth = srcWidth / 2;
-					final int halfHeight = srcHeight / 2;
-					while ((halfWidth / scale) > targetWidth || (halfHeight / scale) > targetHeight) { // ||
+					while (srcWidth / 2 >= targetWidth || srcHeight / 2 >= targetHeight) { // ||
+						srcWidth /= 2;
+						srcHeight /= 2;
 						scale *= 2;
 					}
 				} else {
-					scale = Math.max(srcWidth / targetWidth, srcHeight / targetHeight); // max
+					scale = Math.max(widthScale, heightScale); // max
 				}
 				break;
 			case CROP:
 				if (powerOf2Scale) {
-					final int halfWidth = srcWidth / 2;
-					final int halfHeight = srcHeight / 2;
-					while ((halfWidth / scale) > targetWidth && (halfHeight / scale) > targetHeight) { // &&
+					while (srcWidth / 2 >= targetWidth && srcHeight / 2 >= targetHeight) { // &&
+						srcWidth /= 2;
+						srcHeight /= 2;
 						scale *= 2;
 					}
 				} else {
-					scale = Math.min(srcWidth / targetWidth, srcHeight / targetHeight); // min
+					scale = Math.min(widthScale, heightScale); // min
 				}
 				break;
 		}
@@ -124,21 +127,7 @@ public final class ImageSizeUtils {
 		if (scale < 1) {
 			scale = 1;
 		}
-		scale = considerMaxTextureSize(srcWidth, srcHeight, scale, powerOf2Scale);
 
-		return scale;
-	}
-
-	private static int considerMaxTextureSize(int srcWidth, int srcHeight, int scale, boolean powerOf2) {
-		final int maxWidth = maxBitmapSize.getWidth();
-		final int maxHeight = maxBitmapSize.getHeight();
-		while ((srcWidth / scale) > maxWidth || (srcHeight / scale) > maxHeight) {
-			if (powerOf2) {
-				scale *= 2;
-			} else {
-				scale++;
-			}
-		}
 		return scale;
 	}
 
@@ -152,13 +141,13 @@ public final class ImageSizeUtils {
 	 * @return Minimal sample size
 	 */
 	public static int computeMinImageSampleSize(ImageSize srcSize) {
-		final int srcWidth = srcSize.getWidth();
-		final int srcHeight = srcSize.getHeight();
-		final int targetWidth = maxBitmapSize.getWidth();
-		final int targetHeight = maxBitmapSize.getHeight();
+		int srcWidth = srcSize.getWidth();
+		int srcHeight = srcSize.getHeight();
+		int targetWidth = maxBitmapSize.getWidth();
+		int targetHeight = maxBitmapSize.getHeight();
 
-		final int widthScale = (int) Math.ceil((float) srcWidth / targetWidth);
-		final int heightScale = (int) Math.ceil((float) srcHeight / targetHeight);
+		int widthScale = (int) Math.ceil((float) srcWidth / targetWidth);
+		int heightScale = (int) Math.ceil((float) srcHeight / targetHeight);
 
 		return Math.max(widthScale, heightScale); // max
 	}
@@ -187,16 +176,16 @@ public final class ImageSizeUtils {
 	 */
 	public static float computeImageScale(ImageSize srcSize, ImageSize targetSize, ViewScaleType viewScaleType,
 			boolean stretch) {
-		final int srcWidth = srcSize.getWidth();
-		final int srcHeight = srcSize.getHeight();
-		final int targetWidth = targetSize.getWidth();
-		final int targetHeight = targetSize.getHeight();
+		int srcWidth = srcSize.getWidth();
+		int srcHeight = srcSize.getHeight();
+		int targetWidth = targetSize.getWidth();
+		int targetHeight = targetSize.getHeight();
 
-		final float widthScale = (float) srcWidth / targetWidth;
-		final float heightScale = (float) srcHeight / targetHeight;
+		float widthScale = (float) srcWidth / targetWidth;
+		float heightScale = (float) srcHeight / targetHeight;
 
-		final int destWidth;
-		final int destHeight;
+		int destWidth;
+		int destHeight;
 		if ((viewScaleType == ViewScaleType.FIT_INSIDE && widthScale >= heightScale) || (viewScaleType == ViewScaleType.CROP && widthScale < heightScale)) {
 			destWidth = targetWidth;
 			destHeight = (int) (srcHeight / widthScale);

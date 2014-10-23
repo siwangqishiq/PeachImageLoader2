@@ -2,7 +2,7 @@ package com.xinlan.peachloader;
 
 import java.io.File;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -39,20 +39,27 @@ public class MainApplication extends Application
         // ImageLoaderConfiguration.createDefault(this);
         // method.
         File cacheDir = StorageUtils.getCacheDirectory(context);
-        System.out.println("dir--->"+cacheDir.getAbsolutePath());
+        System.out.println("´ÅÅÌÏÂÔØÄ¿Â¼--->"+cacheDir.getAbsolutePath());
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_launcher) // resource or
+                .cacheInMemory(true) // default
+                .cacheOnDisc(true) // defaultcacheOnDisc
+                .bitmapConfig(Bitmap.Config.ARGB_8888) // default
+                .displayer(new SimpleBitmapDisplayer()) // default
+                .build();
+        
+        
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
                 .threadPoolSize(4) // default
                 .threadPriority(Thread.NORM_PRIORITY - 1) // default
                 .tasksProcessingOrder(QueueProcessingType.FIFO) // default
-                .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new WeakMemoryCache())
-                .memoryCacheSize(2 * 1024 * 1024)
-                .memoryCacheSizePercentage(13) // default
-                .diskCache(new UnlimitedDiskCache(cacheDir)) // default
+                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+                .discCache(new UnlimitedDiscCache(cacheDir)) // default
                 .imageDownloader(new BaseImageDownloader(context)) // default
                 .imageDecoder(new BaseImageDecoder(false)) // default
-                .defaultDisplayImageOptions(DisplayImageOptions.createSimple()) // default
+                .defaultDisplayImageOptions(options) // default
                 .writeDebugLogs()
                 .build();
 //        

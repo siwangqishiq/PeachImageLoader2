@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,13 +65,8 @@ public final class StorageUtils {
 	 */
 	public static File getCacheDirectory(Context context, boolean preferExternal) {
 		File appCacheDir = null;
-		String externalStorageState;
-		try {
-			externalStorageState = Environment.getExternalStorageState();
-		} catch (NullPointerException e) { // (sh)it happens (Issue #660)
-			externalStorageState = "";
-		}
-		if (preferExternal && MEDIA_MOUNTED.equals(externalStorageState) && hasExternalStoragePermission(context)) {
+		if (preferExternal && MEDIA_MOUNTED
+				.equals(Environment.getExternalStorageState()) && hasExternalStoragePermission(context)) {
 			appCacheDir = getExternalCacheDir(context);
 		}
 		if (appCacheDir == null) {

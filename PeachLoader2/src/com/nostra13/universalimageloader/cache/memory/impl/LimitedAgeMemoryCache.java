@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,7 @@
  *******************************************************************************/
 package com.nostra13.universalimageloader.cache.memory.impl;
 
-import android.graphics.Bitmap;
-
-import com.nostra13.universalimageloader.cache.memory.MemoryCache;
+import com.nostra13.universalimageloader.cache.memory.MemoryCacheAware;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,32 +23,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Decorator for {@link MemoryCache}. Provides special feature for cache: if some cached object age exceeds defined
+ * Decorator for {@link MemoryCacheAware}. Provides special feature for cache: if some cached object age exceeds defined
  * value then this object will be removed from cache.
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @see MemoryCache
+ * @see MemoryCacheAware
  * @since 1.3.1
  */
-public class LimitedAgeMemoryCache implements MemoryCache {
+public class LimitedAgeMemoryCache<K, V> implements MemoryCacheAware<K, V> {
 
-	private final MemoryCache cache;
+	private final MemoryCacheAware<K, V> cache;
 
 	private final long maxAge;
-	private final Map<String, Long> loadingDates = Collections.synchronizedMap(new HashMap<String, Long>());
+	private final Map<K, Long> loadingDates = Collections.synchronizedMap(new HashMap<K, Long>());
 
 	/**
 	 * @param cache  Wrapped memory cache
 	 * @param maxAge Max object age <b>(in seconds)</b>. If object age will exceed this value then it'll be removed from
 	 *               cache on next treatment (and therefore be reloaded).
 	 */
-	public LimitedAgeMemoryCache(MemoryCache cache, long maxAge) {
+	public LimitedAgeMemoryCache(MemoryCacheAware<K, V> cache, long maxAge) {
 		this.cache = cache;
 		this.maxAge = maxAge * 1000; // to milliseconds
 	}
 
 	@Override
-	public boolean put(String key, Bitmap value) {
+	public boolean put(K key, V value) {
 		boolean putSuccesfully = cache.put(key, value);
 		if (putSuccesfully) {
 			loadingDates.put(key, System.currentTimeMillis());
@@ -59,7 +57,7 @@ public class LimitedAgeMemoryCache implements MemoryCache {
 	}
 
 	@Override
-	public Bitmap get(String key) {
+	public V get(K key) {
 		Long loadingDate = loadingDates.get(key);
 		if (loadingDate != null && System.currentTimeMillis() - loadingDate > maxAge) {
 			cache.remove(key);
@@ -70,13 +68,13 @@ public class LimitedAgeMemoryCache implements MemoryCache {
 	}
 
 	@Override
-	public Bitmap remove(String key) {
+	public void remove(K key) {
+		cache.remove(key);
 		loadingDates.remove(key);
-		return cache.remove(key);
 	}
 
 	@Override
-	public Collection<String> keys() {
+	public Collection<K> keys() {
 		return cache.keys();
 	}
 

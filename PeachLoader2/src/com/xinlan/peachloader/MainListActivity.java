@@ -21,14 +21,6 @@ public final class MainListActivity extends Activity
     private LayoutInflater mInflater;
     private ListView mListView;
 
-    DisplayImageOptions options = new DisplayImageOptions.Builder()
-            .showImageOnLoading(R.drawable.ic_launcher) // resource or
-            .cacheInMemory(true) // default
-            .cacheOnDisk(true) // default
-            .bitmapConfig(Bitmap.Config.ARGB_8888) // default
-            .displayer(new SimpleBitmapDisplayer()) // default
-            .build();
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,7 +69,7 @@ public final class MainListActivity extends Activity
                 holder = (ViewHolder) convertView.getTag();
             }
             String url = urls[position];
-            ImageLoader.getInstance().displayImage(url, holder.img,options,null,null);
+            ImageLoader.getInstance().displayImage(url, holder.img);
             return convertView;
         }
     }// end inner class

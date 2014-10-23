@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package com.nostra13.universalimageloader.core.display;
 
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
-
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -32,8 +31,7 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
  * <br />
  * <br />
  * If this implementation doesn't meet your needs then consider
- * <a href="https://github.com/vinc3m1/RoundedImageView">RoundedImageView</a> or
- * <a href="https://github.com/Pkmmte/CircularImageView">CircularImageView</a> projects for usage.
+ * <a href="https://github.com/vinc3m1/RoundedImageView">this project</a> for usage.
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  * @since 1.5.6
@@ -61,23 +59,21 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 		imageAware.setImageDrawable(new RoundedDrawable(bitmap, cornerRadius, margin));
 	}
 
-	public static class RoundedDrawable extends Drawable {
+	protected static class RoundedDrawable extends Drawable {
 
 		protected final float cornerRadius;
 		protected final int margin;
 
-		protected final RectF mRect = new RectF(),
-				mBitmapRect;
+		protected final RectF mRect = new RectF();
 		protected final BitmapShader bitmapShader;
 		protected final Paint paint;
 
-		public RoundedDrawable(Bitmap bitmap, int cornerRadius, int margin) {
+		RoundedDrawable(Bitmap bitmap, int cornerRadius, int margin) {
 			this.cornerRadius = cornerRadius;
 			this.margin = margin;
 
 			bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-			mBitmapRect = new RectF (margin, margin, bitmap.getWidth() - margin, bitmap.getHeight() - margin);
-			
+
 			paint = new Paint();
 			paint.setAntiAlias(true);
 			paint.setShader(bitmapShader);
@@ -87,12 +83,6 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 		protected void onBoundsChange(Rect bounds) {
 			super.onBoundsChange(bounds);
 			mRect.set(margin, margin, bounds.width() - margin, bounds.height() - margin);
-			
-			// Resize the original bitmap to fit the new bound
-			Matrix shaderMatrix = new Matrix();
-			shaderMatrix.setRectToRect(mBitmapRect, mRect, Matrix.ScaleToFit.FILL);
-			bitmapShader.setLocalMatrix(shaderMatrix);
-			
 		}
 
 		@Override

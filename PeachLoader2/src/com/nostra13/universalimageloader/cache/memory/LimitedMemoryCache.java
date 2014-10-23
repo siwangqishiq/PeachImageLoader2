@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
  * limitations under the License.
  *******************************************************************************/
 package com.nostra13.universalimageloader.cache.memory;
-
-import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.utils.L;
 
@@ -35,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @see BaseMemoryCache
  * @since 1.0.0
  */
-public abstract class LimitedMemoryCache extends BaseMemoryCache {
+public abstract class LimitedMemoryCache<K, V> extends BaseMemoryCache<K, V> {
 
 	private static final int MAX_NORMAL_CACHE_SIZE_IN_MB = 16;
 	private static final int MAX_NORMAL_CACHE_SIZE = MAX_NORMAL_CACHE_SIZE_IN_MB * 1024 * 1024;
@@ -49,7 +47,7 @@ public abstract class LimitedMemoryCache extends BaseMemoryCache {
 	 * limit then first object is deleted (but it continue exist at {@link #softMap} and can be collected by GC at any
 	 * time)
 	 */
-	private final List<Bitmap> hardCache = Collections.synchronizedList(new LinkedList<Bitmap>());
+	private final List<V> hardCache = Collections.synchronizedList(new LinkedList<V>());
 
 	/** @param sizeLimit Maximum size for cache (in bytes) */
 	public LimitedMemoryCache(int sizeLimit) {
@@ -61,7 +59,7 @@ public abstract class LimitedMemoryCache extends BaseMemoryCache {
 	}
 
 	@Override
-	public boolean put(String key, Bitmap value) {
+	public boolean put(K key, V value) {
 		boolean putSuccessfully = false;
 		// Try to add value to hard cache
 		int valueSize = getSize(value);
@@ -69,7 +67,7 @@ public abstract class LimitedMemoryCache extends BaseMemoryCache {
 		int curCacheSize = cacheSize.get();
 		if (valueSize < sizeLimit) {
 			while (curCacheSize + valueSize > sizeLimit) {
-				Bitmap removedValue = removeNext();
+				V removedValue = removeNext();
 				if (hardCache.remove(removedValue)) {
 					curCacheSize = cacheSize.addAndGet(-getSize(removedValue));
 				}
@@ -85,14 +83,14 @@ public abstract class LimitedMemoryCache extends BaseMemoryCache {
 	}
 
 	@Override
-	public Bitmap remove(String key) {
-		Bitmap value = super.get(key);
+	public void remove(K key) {
+		V value = super.get(key);
 		if (value != null) {
 			if (hardCache.remove(value)) {
 				cacheSize.addAndGet(-getSize(value));
 			}
 		}
-		return super.remove(key);
+		super.remove(key);
 	}
 
 	@Override
@@ -106,7 +104,7 @@ public abstract class LimitedMemoryCache extends BaseMemoryCache {
 		return sizeLimit;
 	}
 
-	protected abstract int getSize(Bitmap value);
+	protected abstract int getSize(V value);
 
-	protected abstract Bitmap removeNext();
+	protected abstract V removeNext();
 }

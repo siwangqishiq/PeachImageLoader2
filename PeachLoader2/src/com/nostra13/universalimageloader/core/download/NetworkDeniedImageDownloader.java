@@ -13,16 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.nostra13.universalimageloader.cache.disc.naming;
+package com.nostra13.universalimageloader.core.download;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Generates names for files at disc cache
+ * Decorator. Prevents downloads from network (throws {@link IllegalStateException exception}).<br />
+ * In most cases this downloader shouldn't be used directly.
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @since 1.3.1
+ * @since 1.8.0
  */
-public interface FileNameGenerator {
+public class NetworkDeniedImageDownloader implements ImageDownloader {
 
-	/** Generates unique file name for image defined by URI */
-	public abstract String generate(String imageUri);
+	private final ImageDownloader wrappedDownloader;
+
+	public NetworkDeniedImageDownloader(ImageDownloader wrappedDownloader) {
+		this.wrappedDownloader = wrappedDownloader;
+	}
+
+	@Override
+	public InputStream getStream(String imageUri, Object extra) throws IOException {
+		switch (Scheme.ofUri(imageUri)) {
+			case HTTP:
+			case HTTPS:
+				throw new IllegalStateException();
+			default:
+				return wrappedDownloader.getStream(imageUri, extra);
+		}
+	}
 }

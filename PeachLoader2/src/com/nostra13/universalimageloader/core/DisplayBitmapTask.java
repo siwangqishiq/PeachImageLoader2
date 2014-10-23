@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
+ * Copyright 2011-2013 Sergey Tarasevich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.L;
 
 /**
@@ -45,8 +45,10 @@ final class DisplayBitmapTask implements Runnable {
 	private final ImageLoaderEngine engine;
 	private final LoadedFrom loadedFrom;
 
+	private boolean loggingEnabled;
+
 	public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
-			LoadedFrom loadedFrom) {
+							 LoadedFrom loadedFrom) {
 		this.bitmap = bitmap;
 		imageUri = imageLoadingInfo.uri;
 		imageAware = imageLoadingInfo.imageAware;
@@ -57,19 +59,18 @@ final class DisplayBitmapTask implements Runnable {
 		this.loadedFrom = loadedFrom;
 	}
 
-	@Override
 	public void run() {
 		if (imageAware.isCollected()) {
-			L.d(LOG_TASK_CANCELLED_IMAGEAWARE_COLLECTED, memoryCacheKey);
+			if (loggingEnabled) L.d(LOG_TASK_CANCELLED_IMAGEAWARE_COLLECTED, memoryCacheKey);
 			listener.onLoadingCancelled(imageUri, imageAware.getWrappedView());
 		} else if (isViewWasReused()) {
-			L.d(LOG_TASK_CANCELLED_IMAGEAWARE_REUSED, memoryCacheKey);
+			if (loggingEnabled) L.d(LOG_TASK_CANCELLED_IMAGEAWARE_REUSED, memoryCacheKey);
 			listener.onLoadingCancelled(imageUri, imageAware.getWrappedView());
 		} else {
-			L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
+			if (loggingEnabled) L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
 			displayer.display(bitmap, imageAware, loadedFrom);
-			engine.cancelDisplayTaskFor(imageAware);
 			listener.onLoadingComplete(imageUri, imageAware.getWrappedView(), bitmap);
+			engine.cancelDisplayTaskFor(imageAware);
 		}
 	}
 
@@ -77,5 +78,9 @@ final class DisplayBitmapTask implements Runnable {
 	private boolean isViewWasReused() {
 		String currentCacheKey = engine.getLoadingUriForView(imageAware);
 		return !memoryCacheKey.equals(currentCacheKey);
+	}
+
+	void setLoggingEnabled(boolean loggingEnabled) {
+		this.loggingEnabled = loggingEnabled;
 	}
 }
